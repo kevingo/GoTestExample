@@ -1,0 +1,4 @@
+mode: atomic
+GoTestExample/function/calculator.go:5.46,6.12 1 1
+GoTestExample/function/calculator.go:10.2,10.19 1 1
+GoTestExample/function/calculator.go:6.12,8.3 1 0
