@@ -1,0 +1,21 @@
+language: go
+
+sudo: false
+
+go:
+  - 1.6
+  - 1.7
+
+before_script:
+  - go fmt ./...
+  - go vet $(go list ./...)
+
+script:
+  - go test -coverprofile=coverage.txt -covermode=atomic ./...
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  email:
+    - kevingo75@gmail.com
