@@ -11,7 +11,7 @@ before_script:
   - go vet $(go list ./...)
 
 script:
-  - go test -coverprofile=coverage.txt -covermode=atomic ./...
+  - go test -coverprofile=coverage.txt -covermode=atomic ./function/
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
