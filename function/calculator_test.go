@@ -17,3 +17,9 @@ func Test_Division_Zero(t *testing.T) {
 		t.Log("Check zero correctlly.")
 	}
 }
+
+func BenchmarkDivision(b *testing.B) {
+	for i:=0 ; i<b.N ; i++ {
+		Division(6, 2);
+	}
+}
