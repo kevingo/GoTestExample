@@ -49,7 +49,7 @@ func Test_Division_Zero(t *testing.T) {
 - 測試 6 / 2 要等於 3
 - 測試 6 / 0 會拋出 error
 
-你可以先在 local 端使用 `go test ./...` 指令進行測試：
+你可以先在 local 端使用 `go test -v ./function/` 指令進行測試：
 
 ```
 $ go test -v ./...
@@ -63,7 +63,7 @@ PASS
 ok     	GoTestExample/function 	0.021s
 ```
 
-確定沒問題後，就完成基本的測試。
+確定沒問題後，就完成基本的測試。`-v` 的參數代表開啟 debug mode，你可以看到每個測試運作的情行。
 
 ## 使用 Travis CI 進行自動測試
 
@@ -83,12 +83,22 @@ before_script:
   - go vet $(go list ./...)
 
 script:
-  - go test -coverprofile=coverage.txt -covermode=atomic ./function/
+  - go test ./function/
   - go test ./function/ -bench=. -cpu=1,2,4,8
 
 ```
 
-這裡的意思是，讓 Travis CI 幫你測試 1.6 和 1.7 版的 golang 是不是可以正確跑測試，測試的 script 就是 `go test ./...`，在跑測試前，我們做 `go fmt` 和 `go vet` 兩件事情。
+這裡的意思是，讓 Travis CI 幫你測試 1.6 和 1.7 版的 golang 是不是可以正確跑測試，測試的 script 變成 `go test ./function/` 和 `go test ./function/ -bench=. -cpu=1,2,4,8`。我們分別來看看是在做什麼。
+
+在跑測試前，我們做 `go fmt` 和 `go vet` 兩件事情。
+- `go fmt` 會自動格式化好你的程式碼
+- `go vet` 則是會針對程式碼進行靜態分析，找出一些可潛在的錯誤。
+
+這部分你不寫，也是可以的，只是加上去會讓你在跑測試前，先透過 golang 自帶的工具幫你處理掉一些低級錯誤。
+
+接著是測試的部分，我們主要執行兩行指令：
+- `go test ./function/`：我們主要測試 function 這個這個 package 裡面的函式。
+- `go test ./function/ -bench=. -cpu=1,2,4,8`：針對 Benchmark 進行測試。
 
 接著你在 Travis CI 裡面，當你有新的 commit 時，就會看到你的專案正在進行測試：
 
