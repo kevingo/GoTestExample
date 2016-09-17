@@ -83,7 +83,8 @@ before_script:
   - go vet $(go list ./...)
 
 script:
-  - go test ./...
+  - go test -coverprofile=coverage.txt -covermode=atomic ./function/
+  - go test ./function/ -bench=. -cpu=1,2,4,8
 
 ```
 
