@@ -3,6 +3,8 @@
 
 這個專案主要用來記錄如何在 golang 裡面寫測試，並且整合 [Travis CI](https://travis-ci.org/) 和 [codecov](https://codecov.io)。
 
+### 寫 function
+
 首先，假設我們寫了一個 Division 的 function 用來處理兩個浮點數相除，並且判斷除數為零的時候要拋出 error，可以這樣寫，並把這個檔案存成 `calculator.go`：
 
 ```
@@ -19,6 +21,8 @@ func Division(a, b float64) (float64, error) {
 }
 
 ```
+
+### 寫測試
 
 接著我們要針對這個 function 進行測試，產生一個 `calculator_test.go` 的檔案來寫我們的測試程式。在 go 中，每一個檔案只要加上 `_test` 就是對應的測試程式。
 
@@ -64,6 +68,9 @@ ok     	GoTestExample/function 	0.021s
 ```
 
 確定沒問題後，就完成基本的測試。`-v` 的參數代表開啟 debug mode，你可以看到每個測試運作的情行。
+
+### 寫壓力測試
+
 
 ## 使用 Travis CI 進行自動測試
 
