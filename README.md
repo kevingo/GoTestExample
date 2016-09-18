@@ -67,10 +67,29 @@ PASS
 ok     	GoTestExample/function 	0.021s
 ```
 
-確定沒問題後，就完成基本的測試。`-v` 的參數代表開啟 debug mode，你可以看到每個測試運作的情行。
+確定沒問題後，就完成基本的測試。`-v` 的參數代表開啟 debug mode，你可以看到每個測試運作的情形。
 
 ### 寫壓力測試
 
+golang 測試的項目還可以包含性能的測試，只要在設測試 function 中，以 `Benchmark` 開頭的開頭的 function 就代表一個壓力測試的側項。針對針對 Division 的函式，我們可以寫一個很簡單的測試函式如下：
+
+```
+func BenchmarkDivision(b *testing.B) {
+	for i:=0 ; i<b.N ; i++ {
+		Division(6, 2);
+	}
+}
+```
+
+執行測試時，golang 會幫我們自動執行 `b.N` 次來計算測試的結果，你會看到類似如下的結果：
+
+```
+$ go test ./function/ -bench=. -cpu=1,2,4,8
+BenchmarkDivision      	2000000000     	         0.70 ns/op
+BenchmarkDivision-2    	2000000000     	         0.69 ns/op
+BenchmarkDivision-4    	2000000000     	         0.82 ns/op
+BenchmarkDivision-8    	2000000000     	         0.69 ns/op
+```
 
 ## 使用 Travis CI 進行自動測試
 
@@ -95,17 +114,17 @@ script:
 
 ```
 
-這裡的意思是，讓 Travis CI 幫你測試 1.6 和 1.7 版的 golang 是不是可以正確跑測試，測試的 script 變成 `go test ./function/` 和 `go test ./function/ -bench=. -cpu=1,2,4,8`。我們分別來看看是在做什麼。
+這裡的意思是，讓 Travis CI 幫你測試 1.6 和 1.7 版的 golang 是不是可以正確跑測試。
 
 在跑測試前，我們做 `go fmt` 和 `go vet` 兩件事情。
 - `go fmt` 會自動格式化好你的程式碼
-- `go vet` 則是會針對程式碼進行靜態分析，找出一些可潛在的錯誤。
+- `go vet` 則是會針對程式碼進行靜態分析，找出一些可能的潛在錯誤。
 
 這部分你不寫，也是可以的，只是加上去會讓你在跑測試前，先透過 golang 自帶的工具幫你處理掉一些低級錯誤。
 
 接著是測試的部分，我們主要執行兩行指令：
 - `go test ./function/`：我們主要測試 function 這個這個 package 裡面的函式。
-- `go test ./function/ -bench=. -cpu=1,2,4,8`：針對 Benchmark 進行測試。
+- `go test ./function/ -bench=. -cpu=1,2,4,8`：跑壓力測試。
 
 接著你在 Travis CI 裡面，當你有新的 commit 時，就會看到你的專案正在進行測試：
 
@@ -137,8 +156,13 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 ```
 
-在跑測試的時候，多產生一個 `coverage.txt` 的檔案，並且在測試成功後增加一行 `bash <(curl -s https://codecov.io/bash)`，就這麼簡單！
+在跑測試的時候，利用 go test 指令自帶的一個 `coverprofile` 多產生一個 `coverage.txt` 的檔案，並且指定 `covermode=atomic`。
+`covermode` 共有 `set`、`count` 和 `atomic` 三種模式，`atomic` 指定每個測試測試 statement 在並發的狀況下跑了幾次。最後，在測試成功後增加一行 `bash <(curl -s https://codecov.io/bash)`，就這麼簡單！
 
 如果你登入到 [codecov.io](https://codecov.io)，還可以看到 code coverage 的數據，也會顯示你的測試涵蓋了哪幾個部分，相當方便。
 
 ![image](https://github.com/kevingo/blog/raw/master/screenshot/codecov.png)
+
+## References
+- [codecov example-go](https://github.com/codecov/example-go)
+- [The Go Blog - The cover story](https://blog.golang.org/cover)
