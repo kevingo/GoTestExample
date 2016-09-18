@@ -166,3 +166,4 @@ after_success:
 ## References
 - [codecov example-go](https://github.com/codecov/example-go)
 - [The Go Blog - The cover story](https://blog.golang.org/cover)
+- [golang test package](https://golang.org/cmd/go/#hdr-Test_packages)
