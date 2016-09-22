@@ -1,6 +1,9 @@
 package function
 
-import "testing"
+import (
+	"testing"
+	"fmt"
+)
 
 func Test_Division(t *testing.T) {
 	if i, e := Division(6, 2); i != 3 || e != nil {
@@ -22,4 +25,9 @@ func BenchmarkDivision(b *testing.B) {
 	for i:=0 ; i<b.N ; i++ {
 		Division(6, 2);
 	}
+}
+
+func ExampleDivision() {
+	fmt.Println(Division(6, 2))
+    // Output: 3 <nil>
 }

@@ -3,6 +3,8 @@
 
 這個專案主要用來記錄如何在 golang 裡面寫測試，並且整合 [Travis CI](https://travis-ci.org/) 和 [codecov](https://codecov.io)。
 
+[2016-09-21] 記錄如何在 test 中使用 Example function，並與 godoc 結合使用。
+
 ### 寫 function
 
 首先，假設我們寫了一個 Division 的 function 用來處理兩個浮點數相除，並且判斷除數為零的時候要拋出 error，可以這樣寫，並把這個檔案存成 `calculator.go`：
@@ -162,6 +164,52 @@ after_success:
 如果你登入到 [codecov.io](https://codecov.io)，還可以看到 code coverage 的數據，也會顯示你的測試涵蓋了哪幾個部分，相當方便。
 
 ![image](https://github.com/kevingo/blog/raw/master/screenshot/codecov.png)
+
+### Example function
+
+在 testing 的 package 中，除了提供了以 Testxxx 開頭的 testing function 外，還提供了一種以 Example 開頭的 function。這種 Examplexxx 的 function 用途是提供 godoc 使用的範例程式碼。這種 Example function 有兩個規範：
+
+1. 以 Example 開頭
+2. 沒有參數
+
+你可以在原本的 `_test.go` 的檔案中，增加一個 ExampleDivision 的 function，並且增加一個 `Output:` 的註解：
+
+```
+func ExampleDivision() {
+	fmt.Println(Division(6, 2))
+	// Output: 3 <nil>
+}
+```
+
+接著，你可以跑一下測試 `go test ./function/` 確認沒問題：
+
+```
+$ go test -v ./function/
+=== RUN   Test_Division
+--- PASS: Test_Division (0.00s)
+	calculator_test.go:12: Pass
+=== RUN   Test_Division_Zero
+--- PASS: Test_Division_Zero (0.00s)
+	calculator_test.go:20: Check zero correctlly.
+PASS
+ok  	github.com/kevingo/GoTestExample/function	0.023s
+```
+
+你可能會好奇為什麼 Example 要跑測試？事實上，在跑測試的時候，如果你有寫 `Output:` 在註解中時，他會幫你檢查你的輸出是不是正確，如果不正確的話，是沒辦法跑過測試的。你可以嘗試更改上面註解中的值然後再跑跑看測試，會得到類似以下的錯誤：
+
+```
+got:
+3 <nil>
+want:
+
+FAIL
+exit status 1
+FAIL	github.com/kevingo/GoTestExample/function	0.021s
+```
+
+接著，golang 內建了 godoc 工具，可以在 local 端跑一個 web server 來看文件，你可以執行 `godoc -http=:6060` 指令來起一個跑在 6060 port 的 doc server。接著在網址列輸入：`http://localhost:6060/pkg/github.com/kevingo/GoTestExample/function/` (目錄名稱可以按照自己實際的專案目錄結構來調整)，就會看到我們剛剛建立的 ExampleDivision 被轉換成 godoc 的文件了：
+
+![image](https://github.com/kevingo/blog/raw/master/screenshot/godoc.png)
 
 ## References
 - [codecov example-go](https://github.com/codecov/example-go)
