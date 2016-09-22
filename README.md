@@ -5,7 +5,18 @@
 
 [2016-09-21] 記錄如何在 test 中使用 Example function，並與 godoc 結合使用。
 
-### 寫 function
+## 目錄
+
+- [撰寫 function](#function)
+- [撰寫 測試](#testing)
+- [撰寫 壓力測試](#benchmark)
+- [整合 Travis CI](#travis)
+- [整合 codecov](#codecov)
+- [撰寫 Example function](#example)
+- [Reference](#reference)
+
+
+### <a name="function" /> 撰寫 function
 
 首先，假設我們寫了一個 Division 的 function 用來處理兩個浮點數相除，並且判斷除數為零的時候要拋出 error，可以這樣寫，並把這個檔案存成 `calculator.go`：
 
@@ -24,7 +35,7 @@ func Division(a, b float64) (float64, error) {
 
 ```
 
-### 寫測試
+### <a name="testing" /> 撰寫測試
 
 接著我們要針對這個 function 進行測試，產生一個 `calculator_test.go` 的檔案來寫我們的測試程式。在 go 中，每一個檔案只要加上 `_test` 就是對應的測試程式。
 
@@ -71,7 +82,7 @@ ok     	GoTestExample/function 	0.021s
 
 確定沒問題後，就完成基本的測試。`-v` 的參數代表開啟 debug mode，你可以看到每個測試運作的情形。
 
-### 寫壓力測試
+### <a name="benchmark" /> 撰寫壓力測試
 
 golang 測試的項目還可以包含性能的測試，只要在設測試 function 中，以 `Benchmark` 開頭的開頭的 function 就代表一個壓力測試的側項。針對針對 Division 的函式，我們可以寫一個很簡單的測試函式如下：
 
@@ -93,7 +104,7 @@ BenchmarkDivision-4    	2000000000     	         0.82 ns/op
 BenchmarkDivision-8    	2000000000     	         0.69 ns/op
 ```
 
-## 使用 Travis CI 進行自動測試
+### <a name="travis" /> 使用 Travis CI 進行自動測試
 
 你可以在每次的 commit 時，透過 Travis CI 進行測試，整合的方式很簡單，首先，Travis CI 是透過 yaml 進行設定，在你的專案根目錄下，新增一個 `.travis.yml` 的檔案，寫入：
 
@@ -132,7 +143,7 @@ script:
 
 ![image](https://github.com/kevingo/blog/raw/master/screenshot/travis.png)
 
-## 整合 codecov
+### <a name="codecov" /> 整合 codecov
 
 codecov 是用來檢查 code coverage 的一個線上服務，和 Travis CI 以及 github 都整合的很好，很容易就可以與你的專案整合起來了。
 
@@ -165,7 +176,7 @@ after_success:
 
 ![image](https://github.com/kevingo/blog/raw/master/screenshot/codecov.png)
 
-### Example function
+### <a name="example" /> Example function
 
 在 testing 的 package 中，除了提供了以 Testxxx 開頭的 testing function 外，還提供了一種以 Example 開頭的 function。這種 Examplexxx 的 function 用途是提供 godoc 使用的範例程式碼。這種 Example function 有兩個規範：
 
@@ -211,7 +222,7 @@ FAIL	github.com/kevingo/GoTestExample/function	0.021s
 
 ![image](https://github.com/kevingo/blog/raw/master/screenshot/godoc.png)
 
-## References
+### <a name="reference" /> References
 - [codecov example-go](https://github.com/codecov/example-go)
 - [The Go Blog - The cover story](https://blog.golang.org/cover)
 - [golang test package](https://golang.org/cmd/go/#hdr-Test_packages)
