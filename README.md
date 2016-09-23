@@ -20,7 +20,7 @@
 
 首先，假設我們寫了一個 Division 的 function 用來處理兩個浮點數相除，並且判斷除數為零的時候要拋出 error，可以這樣寫，並把這個檔案存成 `calculator.go`：
 
-```
+```go
 package function
 
 import "errors"
@@ -39,7 +39,7 @@ func Division(a, b float64) (float64, error) {
 
 接著我們要針對這個 function 進行測試，產生一個 `calculator_test.go` 的檔案來寫我們的測試程式。在 go 中，每一個檔案只要加上 `_test` 就是對應的測試程式。
 
-```
+```go
 package function
 
 import "testing"
@@ -86,7 +86,7 @@ ok     	GoTestExample/function 	0.021s
 
 golang 測試的項目還可以包含性能的測試，只要在設測試 function 中，以 `Benchmark` 開頭的開頭的 function 就代表一個壓力測試的側項。針對針對 Division 的函式，我們可以寫一個很簡單的測試函式如下：
 
-```
+```go
 func BenchmarkDivision(b *testing.B) {
 	for i:=0 ; i<b.N ; i++ {
 		Division(6, 2);
@@ -108,7 +108,7 @@ BenchmarkDivision-8    	2000000000     	         0.69 ns/op
 
 你可以在每次的 commit 時，透過 Travis CI 進行測試，整合的方式很簡單，首先，Travis CI 是透過 yaml 進行設定，在你的專案根目錄下，新增一個 `.travis.yml` 的檔案，寫入：
 
-```
+```yaml
 language: go
 
 sudo: false
@@ -149,7 +149,7 @@ codecov 是用來檢查 code coverage 的一個線上服務，和 Travis CI 以�
 
 首先，你只需要將你的 `.travis.yml` 改成：
 
-```
+```yaml
 language: go
 
 sudo: false
@@ -185,7 +185,7 @@ after_success:
 
 你可以在原本的 `_test.go` 的檔案中，增加一個 ExampleDivision 的 function，並且增加一個 `Output:` 的註解：
 
-```
+```go
 func ExampleDivision() {
 	fmt.Println(Division(6, 2))
 	// Output: 3 <nil>
